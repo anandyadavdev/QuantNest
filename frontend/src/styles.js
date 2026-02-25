@@ -1,0 +1,41 @@
+// src/styles.js — shared styles for dark/light mode
+
+export const darkStyles = {
+  card:      { background: "#0f1118", border: "1px solid #1e293b", borderRadius: 16, padding: 20 },
+  input:     { width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: 10, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, marginBottom: 12, boxSizing: "border-box", outline: "none" },
+  btn:       { width: "100%", padding: "11px 16px", background: "#2563eb", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer" },
+  errorBox:  { background: "rgba(248,113,113,.1)", border: "1px solid rgba(248,113,113,.3)", borderRadius: 10, padding: "10px 14px", color: "#f87171", fontSize: 13, marginBottom: 12 },
+  pageTitle: { fontSize: 22, fontWeight: 700, color: "#f1f5f9", margin: "0 0 20px", fontFamily: "'Syne',sans-serif" },
+  grid4:     { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 16, marginBottom: 16 },
+  grid2:     { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 },
+  rowBetween:{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 },
+  badge:     { display: "inline-block", background: "rgba(96,165,250,.1)", border: "1px solid rgba(96,165,250,.3)", color: "#60a5fa", padding: "4px 12px", borderRadius: 99, fontSize: 13, marginBottom: 16 },
+  empty:     { textAlign: "center", color: "#475569", padding: "48px 0", fontSize: 14 },
+  expRow:    { display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0f1118", border: "1px solid #1e293b", borderRadius: 12, padding: "14px 16px", marginBottom: 10 },
+  tableWrap: { overflowX: "auto" },
+  table:     { width: "100%", borderCollapse: "collapse", fontSize: 13 },
+  th:        { textAlign: "left", padding: "10px 12px", color: "#475569", fontWeight: 600, borderBottom: "1px solid #1e293b", whiteSpace: "nowrap" },
+  td:        { padding: "12px 12px", color: "#94a3b8", borderBottom: "1px solid #0f1118", whiteSpace: "nowrap" },
+  tr:        { transition: "background .15s" },
+  delBtn:    { background: "rgba(248,113,113,.1)", border: "1px solid rgba(248,113,113,.3)", color: "#f87171", borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontSize: 12 },
+};
+
+export const lightStyles = {
+  card:      { background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 16, padding: 20, boxShadow: "0 2px 12px rgba(0,0,0,.06)" },
+  input:     { width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", color: "#1e293b", fontSize: 14, marginBottom: 12, boxSizing: "border-box", outline: "none" },
+  btn:       { width: "100%", padding: "11px 16px", background: "#2563eb", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer" },
+  errorBox:  { background: "rgba(248,113,113,.08)", border: "1px solid rgba(248,113,113,.3)", borderRadius: 10, padding: "10px 14px", color: "#dc2626", fontSize: 13, marginBottom: 12 },
+  pageTitle: { fontSize: 22, fontWeight: 700, color: "#1e293b", margin: "0 0 20px", fontFamily: "'Syne',sans-serif" },
+  grid4:     { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 16, marginBottom: 16 },
+  grid2:     { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 },
+  rowBetween:{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 },
+  badge:     { display: "inline-block", background: "rgba(37,99,235,.08)", border: "1px solid rgba(37,99,235,.2)", color: "#2563eb", padding: "4px 12px", borderRadius: 99, fontSize: 13, marginBottom: 16 },
+  empty:     { textAlign: "center", color: "#94a3b8", padding: "48px 0", fontSize: 14 },
+  expRow:    { display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "14px 16px", marginBottom: 10 },
+  tableWrap: { overflowX: "auto" },
+  table:     { width: "100%", borderCollapse: "collapse", fontSize: 13 },
+  th:        { textAlign: "left", padding: "10px 12px", color: "#94a3b8", fontWeight: 600, borderBottom: "1px solid #e2e8f0", whiteSpace: "nowrap" },
+  td:        { padding: "12px 12px", color: "#64748b", borderBottom: "1px solid #f1f5f9", whiteSpace: "nowrap" },
+  tr:        { transition: "background .15s" },
+  delBtn:    { background: "rgba(220,38,38,.08)", border: "1px solid rgba(220,38,38,.2)", color: "#dc2626", borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontSize: 12 },
+};
