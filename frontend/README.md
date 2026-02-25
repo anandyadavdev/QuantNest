@@ -1,16 +1,53 @@
-# React + Vite
+# 🚀 QuantNest - AI-Powered Financial Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**QuantNest** ek advanced MERN stack application hai jo users ko unke stocks aur expenses track karne mein madad karta hai. Isme **Llama 3 (via Groq API)** ka use kiya gaya hai jo aapke portfolio ko analyze karke personalized financial insights deta hai.
 
-Currently, two official plugins are available:
+## ✨ Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Secure Authentication**: JWT-based login, password hashing, aur Nodemailer ke saath email verification aur password reset functionality.
+* **AI Insights**: Groq API (Llama 3.3 model) ka use karke real-time portfolio analysis aur financial advice.
+* **Interactive Dashboard**: Recharts ka use karke visual data representation (Line, Donut, aur Bar charts).
+* **Expense Tracker**: Category-wise expense management.
+* **Risk Analysis**: Portfolio concentration ke basis par risk level calculation.
+* **Export Data**: Pure portfolio aur expenses ko CSV format mein download karne ki suvidha.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **Frontend**: React.js, Vite, Recharts, CSS Modules.
+* **Backend**: Node.js, Express.js.
+* **Database**: MongoDB Atlas.
+* **AI Model**: Llama 3.3 (Groq SDK).
 
-## Expanding the ESLint configuration
+## 🚀 Installation & Setup
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1.  **Repo Clone Karein:**
+    ```bash
+    git clone [https://github.com/Anand-Kumar-Yadav/quantnest-app.git](https://github.com/Anand-Kumar-Yadav/quantnest-app.git)
+    ```
+
+2.  **Dependencies Install Karein:**
+    ```bash
+    # Backend ke liye
+    cd backend && npm install
+    # Frontend ke liye
+    cd frontend && npm install
+    ```
+
+3.  **Environment Variables (.env):**
+    Backend folder mein `.env` file banayein aur ye keys add karein:
+    * `MONGO_URI`
+    * `JWT_SECRET`
+    * `GROQ_API_KEY`
+    * `EMAIL_USER` / `EMAIL_PASS`
+
+4.  **Run Application:**
+    ```bash
+    # Backend terminal
+    npm run dev (ya node server.js)
+    # Frontend terminal
+    npm run dev
+    ```
+
+## 🌐 Deployment Links
+* **Frontend**: (Vercel Link Coming Soon)
+* **Backend**: (Render Link Coming Soon)
