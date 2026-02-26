@@ -3,10 +3,7 @@ require("dotenv").config();
 
 // 2. Packages import karein
 const express = require("express");
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
-  credentials: true
-}));
+const cors = require("cors"); // 👉 MISSING IMPORT ADDED YAHAN
 const connectDB = require("./config/db");
 
 // 3. Apne routes aur controllers import karein
@@ -21,8 +18,13 @@ const authMiddleware = require("./middleware/authMiddleware");
 const { getMarketInsights } = require("./controllers/aiController");
 
 // 4. Express app setup karein
-const app = express();
-app.use(cors());
+const app = express(); // 👉 APP YAHAN BAN GAYA
+
+// 👉 Middleware hamesha app banne ke baad lagte hain
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  credentials: true
+}));
 app.use(express.json());
 
 // 5. Database connect karein
