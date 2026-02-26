@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const sendEmail = require("../utils/emailService");
 const User = require("../models/User");
 
-// 👉 1. REGISTER
+// 👉 1. REGISTER (Modified to bypass email timeout)
 exports.register = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -13,29 +13,30 @@ exports.register = async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
     
-    // Email Verification Token Generate karein
-    const verificationToken = crypto.randomBytes(20).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(verificationToken).digest("hex");
-
     const user = new User({ 
       email, 
       password: hashed,
-      verificationToken: hashedToken 
+      isVerified: true // 👈 Render par SMTP issue ki wajah se direct true kar rahe hain
     });
+    
     await user.save();
 
-    // Verification Email Bhejein
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
-    const message = `
-      <h2>Welcome to QuantNest! 🎉</h2>
-      <p>Thank you for registering. Please verify your email by clicking the link below:</p>
-      <a href="${verifyUrl}" style="background:#34d399; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block;">Verify Email</a>
-    `;
+    // Verification Email bhejne ki koshish karenge, par agar fail hua toh bhi registration nahi rukega
+    try {
+      const verifyUrl = `${process.env.FRONTEND_URL}/login`; // Verification bypass, so redirect to login
+      const message = `<h2>Welcome to QuantNest! 🎉</h2><p>Registration successful. You can login now.</p>`;
+      
+      // Ise hum await nahi kar rahe taaki timeout response ko block na kare
+      sendEmail({ email: user.email, subject: "Welcome to QuantNest", message }).catch(e => console.log("Email skip: ", e.message));
+    } catch (emailErr) {
+      console.log("Email bypass active");
+    }
 
-    await sendEmail({ email: user.email, subject: "Verify Your QuantNest Account", message });
-
-    res.status(201).json({ message: "Registration successful! Please check your email to verify your account." });
+    res.status(201).json({ 
+      message: "Registration successful! Email verification bypassed for cloud deployment. You can login now." 
+    });
   } catch (err) { 
+    console.error(err);
     res.status(500).json({ message: "Server error" }); 
   }
 };
@@ -47,9 +48,9 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-    // Check karein ki user verified hai ya nahi
+    // User isVerified check (Register mein humne true kar diya hai)
     if (!user.isVerified) {
-      return res.status(403).json({ message: "Please verify your email before logging in. Check your inbox." });
+      return res.status(403).json({ message: "Please verify your email before logging in." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -62,76 +63,49 @@ exports.login = async (req, res) => {
   }
 };
 
-// 👉 3. VERIFY EMAIL
+// 👉 3. VERIFY EMAIL (Bypassed but kept for route safety)
 exports.verifyEmail = async (req, res) => {
   try {
-    const hashedToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
-    
-    const user = await User.findOne({ verificationToken: hashedToken });
-    if (!user) return res.status(400).json({ message: "Invalid or expired verification token" });
-
-    user.isVerified = true;
-    user.verificationToken = undefined; // Token ka kaam khatam
-    await user.save();
-
-    res.status(200).json({ message: "Email successfully verified! You can now login." });
+    res.status(200).json({ message: "Email already verified!" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-// 👉 4. FORGOT PASSWORD
+// 👉 4. FORGOT PASSWORD (Keep it as is, or use same non-blocking pattern)
 exports.forgotPassword = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Create unique token
     const resetToken = crypto.randomBytes(20).toString("hex");
-
-    // Hash token and save to DB
     user.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
-    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes expiry
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
     await user.save();
 
-    // Create reset URL
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-    const message = `
-      <h2>QuantNest Password Reset</h2>
-      <p>You requested a password reset. Please click the link below to set a new password:</p>
-      <a href="${resetUrl}" style="background:#2563eb; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; display:inline-block;">Reset Password</a>
-      <p>If you didn't request this, please ignore this email.</p>
-    `;
+    const message = `<h2>QuantNest Password Reset</h2><p>Click below to reset:</p><a href="${resetUrl}">Reset Password</a>`;
 
-    await sendEmail({ email: user.email, subject: "Password Reset Request", message });
+    // Try-catch for forgot password email
+    sendEmail({ email: user.email, subject: "Password Reset Request", message }).catch(e => console.log("Reset mail fail"));
 
-    res.status(200).json({ message: "Email sent successfully" });
+    res.status(200).json({ message: "If email exists, reset link will be sent." });
   } catch (err) {
-    // Agar email fail ho jaye toh token hata do
-    const user = await User.findOne({ email: req.body.email });
-    if(user) {
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-      await user.save();
-    }
-    res.status(500).json({ message: "Email could not be sent" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 // 👉 5. RESET PASSWORD
 exports.resetPassword = async (req, res) => {
   try {
-    // Get hashed token from URL
     const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
-
     const user = await User.findOne({
       resetPasswordToken,
-      resetPasswordExpire: { $gt: Date.now() } // Check if token is not expired
+      resetPasswordExpire: { $gt: Date.now() }
     });
 
     if (!user) return res.status(400).json({ message: "Invalid or expired token" });
 
-    // Set new password
     user.password = await bcrypt.hash(req.body.password, 10);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
