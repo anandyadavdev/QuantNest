@@ -1,7 +1,8 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
 
-export const API_BASE = "http://localhost:5000/api";
+// 👉 YAHAN CHANGE KIYA HAI: Ab ye Vercel wala link uthayega jab live hoga!
+export const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
 const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
