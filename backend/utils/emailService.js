@@ -1,15 +1,18 @@
 const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
-  // Gmail ke liye specific settings use karein
+  // Port 587 (TLS) use karenge kyunki cloud par 465 aksar block hota hai
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // Port 465 ke liye true
+    port: 587,
+    secure: false, // 587 ke liye false hona chahiye
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    tls: {
+      rejectUnauthorized: false // Cloud servers par handshake easy banane ke liye
+    }
   });
 
   const mailOptions = {
@@ -19,13 +22,12 @@ const sendEmail = async (options) => {
     html: options.message,
   };
 
-  // Error handling add kariye taaki logs mein dikhe agar fail ho
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent: " + info.response);
+    console.log("✅ Email sent successfully: " + info.response);
   } catch (error) {
-    console.error("Nodemailer Error: ", error);
-    throw error; // Isse authController ko pata chalega ki mail fail hua hai
+    console.error("❌ Nodemailer Error: ", error);
+    throw error; 
   }
 };
 
